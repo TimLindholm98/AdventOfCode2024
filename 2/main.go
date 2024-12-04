@@ -10,7 +10,7 @@ import (
 
 func validateDecrease(array[]int) bool {
   var endOfArray = len(array)
-  for i := 1; i < len(array); i++ { // Dont check the one we already checked, thats why i = 1
+  for i := 0; i < len(array); i++ { // Dont check the one we already checked, thats why i = 1
     nextIndex := i+1
     // If the nextIndex is bigger than the arrays values we are on the last value and return true 
     if nextIndex >= endOfArray {
@@ -29,7 +29,7 @@ func validateDecrease(array[]int) bool {
 
 func validateIncrease(array[]int) bool {
   var endOfArray = len(array)
-  for i := 1; i < len(array); i++ { // Dont check the one we already checked, thats why i = 1
+  for i := 0; i < len(array); i++ { // Dont check the one we already checked, thats why i = 1
     nextIndex := i+1
     // If the nextIndex is bigger than the arrays values we are on the last value and return true 
     if nextIndex >= endOfArray {

@@ -11,7 +11,7 @@ import (
 
 
 func main(){
-  file, err := os.Open("data.txt")
+  file, err := os.Open("../data.txt")
 
   if err != nil {
     fmt.Println(err)
@@ -45,7 +45,7 @@ func main(){
   var result int
 
   if len(firstColumn) == len(secondColumn) {
-    for i := 1; i < len(firstColumn); i++ {
+    for i := 0; i < len(firstColumn); i++ {
       if firstColumn[i] > secondColumn[i] {
         result += firstColumn[i] - secondColumn[i] 
       } else {
