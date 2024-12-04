@@ -17,6 +17,7 @@ func main(){
 	}
 
 	var firstColumn[]int
+	//var similarityArray []int
 	var similarityScore int
 	occurrenceCount := make(map[int]int)
 
@@ -39,9 +40,11 @@ func main(){
 		// Create map for the seconds column that contains how many times a number has ocured.
 		occurrenceCount[v1] = occurrenceCount[v1]+1
 	}
-	fmt.Println(occurrenceCount)
+	//fmt.Println(occurrenceCount)
+
 	for i := 0; i < len(firstColumn); i++ {
-		similarityScore += firstColumn[i] * occurrenceCount[i]
+		similarityScore += firstColumn[i] * occurrenceCount[firstColumn[i]]
 	}
+	//fmt.Println("Similarity Array: ", similarityArray)
 	fmt.Println("Similarity Score: ", similarityScore)
 }
