@@ -1,60 +1,87 @@
 package main
 
 import (
-  "bufio"
-  "fmt"
-  "os"
-  "regexp"
-  "strings"
-  "strconv"
+	"bufio"
+	"fmt"
+	"os"
+	"regexp"
+	"strconv"
+	"strings"
 )
 
 func stringToInt(str string) int {
-  outputInt, err := strconv.Atoi(str) // Convert string to int
-  if err != nil {
-    fmt.Println("Error converting:", str, err)
-    os.Exit(1)
-  }
-  return outputInt
+	outputInt, err := strconv.Atoi(str) // Convert string to int
+	if err != nil {
+		fmt.Println("Error converting:", str, err)
+		os.Exit(1)
+	}
+	return outputInt
 }
 
-func main()  {
-  file, err := os.Open("data.txt")
-  if err != nil {
-    fmt.Println(err)
-    os.Exit(1)
-  }
-  fileScanner := bufio.NewScanner(file)
-  fileScanner.Split(bufio.ScanRunes)
-  
-  var mulString string
-  var finalResult int
+func main() {
+	file, err := os.Open("data.txt")
+	if err != nil {
+		fmt.Println("Error opening file:", err)
+		os.Exit(1)
+	}
+	defer file.Close() // Ensure the file is closed properly
 
-  for fileScanner.Scan() {
-    c := fileScanner.Text()
-    if c != "\n" {
-      mulString += c
-    }
-  }
-  // fmt.Println(mulString)
-  // https://stackoverflow.com/questions/37316806/golang-extract-data-with-regex
-  // RegexExpressions
-  re1 := regexp.MustCompile("mul\\([1-9]{1,3}\\,[1-9]{1,3}\\)")
-  re2 := regexp.MustCompile("[0-9]{1,3}\\,[0-9]{1,3}")
-  
-  matches := re1.FindAllString( mulString, -1)
+	fileScanner := bufio.NewScanner(file)
+	fileScanner.Split(bufio.ScanRunes)
 
-  //fmt.Println(matches)
-  for i := 0 ; i < len(matches) ; i++ {
-    // fmt.Println(matches[i])
+	var mulString string
+	var finalResult []int
 
-    // FindAllString() returns string array with matches. 
-    // Then strings.Split() returns a string array with two numbers
-    var valuesToMultiply []string = strings.Split(re2.FindAllString(matches[i],-1)[0],",")
-    // fmt.Println(valuesToMultiply)
-    var result int = stringToInt(valuesToMultiply[0]) * stringToInt(valuesToMultiply[1])
-    finalResult += result
-    // fmt.Println("Values: ", valuesToMultiply[0], "x", valuesToMultiply[1], result)
-  }
-  fmt.Println(finalResult)
+	for fileScanner.Scan() {
+		c := fileScanner.Text()
+		if c == "\n" {
+			mulString += " "
+		} else {
+			mulString += c
+		}
+	}
+
+	// Check for scanning errors
+	if err := fileScanner.Err(); err != nil {
+		fmt.Println("Error reading file:", err)
+		os.Exit(1)
+	}
+
+	// Regex expressions
+	re1 := regexp.MustCompile("mul\\([0-9][1-9]{0,2},[1-9][0-9]{0,2}\\)") // Match full pattern
+	matches := re1.FindAllString(mulString, -1)
+
+	fmt.Println("Matches:", matches)
+
+	if len(matches) == 0 {
+		fmt.Println("No matches found.")
+		os.Exit(0)
+	}
+
+	re2 := regexp.MustCompile("[0-9][1-9]{0,2},[1-9][0-9]{0,2}") // Extract numbers within the brackets
+	for _, match := range matches {
+		// Extract the numbers part
+		numberString := re2.FindString(match)
+		if numberString == "" {
+			fmt.Println("Error: No numbers found in match:", match)
+			continue
+		}
+
+		// Split the numbers
+		valuesToMultiply := strings.Split(numberString, ",")
+		if len(valuesToMultiply) != 2 {
+			fmt.Println("Error: Unexpected format for match:", match)
+			continue
+		}
+
+		// Multiply the numbers and append to results
+		finalResult = append(finalResult, stringToInt(valuesToMultiply[0])*stringToInt(valuesToMultiply[1]))
+	}
+
+	// Calculate the total sum
+	var total int
+	for _, result := range finalResult {
+		total += result
+	}
+	fmt.Println("Total:", total)
 }
