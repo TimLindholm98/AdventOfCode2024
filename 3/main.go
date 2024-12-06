@@ -48,7 +48,7 @@ func main() {
 	}
 
 	// Regex expressions
-	re1 := regexp.MustCompile("mul\\([0-9][1-9]{0,2},[1-9][0-9]{0,2}\\)") // Match full pattern
+	re1 := regexp.MustCompile("mul\\([1-9][0-9]{0,2},[1-9][0-9]{0,2}\\)") // Match full pattern
 	matches := re1.FindAllString(mulString, -1)
 
 	fmt.Println("Matches:", matches)
@@ -58,7 +58,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	re2 := regexp.MustCompile("[0-9][1-9]{0,2},[1-9][0-9]{0,2}") // Extract numbers within the brackets
+	re2 := regexp.MustCompile("[1-9][0-9]{0,2},[1-9][0-9]{0,2}") // Extract numbers within the brackets
 	for _, match := range matches {
 		// Extract the numbers part
 		numberString := re2.FindString(match)
